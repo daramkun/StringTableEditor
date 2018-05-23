@@ -9,6 +9,7 @@
         Title="Untitled.json - String Table Editor" Height="450" Width="800" Closing="Window_Closing">
     <Window.Resources>
         <conv:NullCheckConverter x:Key="nullCheckConverter" />
+        <conv:CultureInfoToFlagImageConverter x:Key="cultureInfoToFlagImageConverter" />
     </Window.Resources>
     
     <Grid>
@@ -92,13 +93,19 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="24" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition />
                                 <RowDefinition />
                             </Grid.RowDefinitions>
 
-                            <TextBlock Text="{Binding DisplayName}" FontSize="18" />
-                            <TextBlock Text="{Binding Name}" Grid.Row="1" />
+                            <Image Source="{Binding Converter={StaticResource cultureInfoToFlagImageConverter}}" Width="16" Height="11" Grid.RowSpan="2" VerticalAlignment="Center" />
+
+                            <TextBlock Text="{Binding DisplayName}" Grid.Column="1" FontSize="18" />
+                            <TextBlock Text="{Binding Name}" Grid.Column="1" Grid.Row="1" />
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
