@@ -1,6 +1,8 @@
-﻿using Microsoft.Win32;
+﻿using Daramee.DaramCommonLib;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -21,11 +23,23 @@ namespace Daramee.StringTableEditor
 	/// <summary>
 	/// MainWindow.xaml에 대한 상호 작용 논리
 	/// </summary>
-	public partial class MainWindow : Window
+	public partial class MainWindow : Window, INotifyPropertyChanged
 	{
 		StringTable stringTable = new StringTable ();
 		string savePath = "";
 		bool isSaved = true;
+
+		public event PropertyChangedEventHandler PropertyChanged;
+		private void PC ( string name ) { PropertyChanged?.Invoke ( this, new PropertyChangedEventArgs ( name ) ); }
+
+		public UndoManager<StringTable> UndoManager { get; } = new UndoManager<StringTable> ();
+		public bool UndoManagerHasUndoStackItem => !UndoManager.IsUndoStackEmpty;
+		public bool UndoManagerHasRedoStackItem => !UndoManager.IsRedoStackEmpty;
+
+		private void SetTitle ()
+		{
+			Title = $"{( isSaved ? "" : "*" )}{( string.IsNullOrEmpty ( savePath ) ? "Untitled.json" : System.IO.Path.GetFileName ( savePath ) )} - String Table Editor";
+		}
 
 		public string SavePath
 		{
@@ -33,16 +47,17 @@ namespace Daramee.StringTableEditor
 			set
 			{
 				savePath = value;
-				Title = $"{( isSaved ? "" : "*" )}{( string.IsNullOrEmpty ( savePath ) ? "Untitled.json" : System.IO.Path.GetFileName ( savePath ) )} - String Table Editor";
+				SetTitle ();
 			}
 		}
+
 		public bool IsSaved
 		{
 			get => isSaved;
 			set
 			{
 				isSaved = value;
-				Title = $"{( isSaved ? "" : "*" )}{( string.IsNullOrEmpty ( savePath ) ? "Untitled.json" : System.IO.Path.GetFileName ( savePath ) )} - String Table Editor";
+				SetTitle ();
 			}
 		}
 
@@ -83,6 +98,7 @@ namespace Daramee.StringTableEditor
 					SavePath = ofd.FileName;
 					IsSaved = true;
 
+					UndoManager.ClearAll ();
 					ResetControlBinding ();
 				}
 				else
@@ -124,12 +140,16 @@ namespace Daramee.StringTableEditor
 		private void ResetControlBinding ()
 		{
 			listBoxCultureInfos.ItemsSource = stringTable.Keys;
+			listBoxCultureInfos.SelectedItem = null;
 			dataGridTable.ItemsSource = null;
 		}
 
 		public MainWindow ()
 		{
 			InitializeComponent ();
+
+			UndoManager.UpdateUndo += ( sender, e ) => { PC ( nameof ( UndoManagerHasUndoStackItem ) ); PC ( nameof ( UndoManagerHasRedoStackItem ) ); };
+			UndoManager.UpdateRedo += ( sender, e ) => { PC ( nameof ( UndoManagerHasUndoStackItem ) ); PC ( nameof ( UndoManagerHasRedoStackItem ) ); };
 
 			ResetControlBinding ();
 		}
@@ -142,6 +162,8 @@ namespace Daramee.StringTableEditor
 			stringTable = new StringTable ();
 			SavePath = "";
 			IsSaved = true;
+
+			UndoManager.ClearAll ();
 
 			ResetControlBinding ();
 		}
@@ -164,6 +186,38 @@ namespace Daramee.StringTableEditor
 		private void Exit_Click ( object sender, RoutedEventArgs e )
 		{
 			this.Close ();
+		}
+
+		private void Undo_Click ( object sender, RoutedEventArgs e )
+		{
+			if ( UndoManager.IsUndoStackEmpty )
+				return;
+
+			UndoManager.SaveToRedoStack ( stringTable );
+
+			var data = UndoManager.LoadFromUndoStack () ?? throw new Exception ();
+			stringTable = data;
+			listBoxCultureInfos.ItemsSource = stringTable.Keys;
+			if ( listBoxCultureInfos.SelectedItems.Count == 1 )
+				dataGridTable.ItemsSource = stringTable [ listBoxCultureInfos.SelectedItem as CultureInfo ];
+			else
+				dataGridTable.ItemsSource = null;
+		}
+
+		private void Redo_Click ( object sender, RoutedEventArgs e )
+		{
+			if ( UndoManager.IsRedoStackEmpty )
+				return;
+
+			UndoManager.SaveToUndoStack ( stringTable, false );
+
+			var data = UndoManager.LoadFromRedoStack () ?? throw new Exception ();
+			stringTable = data;
+			listBoxCultureInfos.ItemsSource = stringTable.Keys;
+			if ( listBoxCultureInfos.SelectedItems.Count == 1 )
+				dataGridTable.ItemsSource = stringTable [ listBoxCultureInfos.SelectedItem as CultureInfo ];
+			else
+				dataGridTable.ItemsSource = null;
 		}
 
 		private void Window_Closing ( object sender, System.ComponentModel.CancelEventArgs e )
@@ -190,6 +244,7 @@ namespace Daramee.StringTableEditor
 			AddLanguageWindow window = new AddLanguageWindow ( stringTable ) { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
 			if ( window.ShowDialog () == false )
 				return;
+			UndoManager.SaveToUndoStack ( stringTable, true );
 			stringTable.Add ( window.SelectedCultureInfo );
 			IsSaved = false;
 		}
@@ -203,6 +258,7 @@ namespace Daramee.StringTableEditor
 				"String Table Editor", MessageBoxButton.YesNo ) == MessageBoxResult.No )
 				return;
 
+			UndoManager.SaveToUndoStack ( stringTable, true );
 			foreach ( CultureInfo cultureInfo in listBoxCultureInfos.SelectedItems )
 			{
 				stringTable.Remove ( cultureInfo );
@@ -214,6 +270,7 @@ namespace Daramee.StringTableEditor
 			AddStringWindow window = new AddStringWindow ( stringTable ) { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
 			if ( window.ShowDialog () == false )
 				return;
+			UndoManager.SaveToUndoStack ( stringTable, true );
 			stringTable.AddKey ( window.Key );
 			IsSaved = false;
 		}
@@ -227,6 +284,7 @@ namespace Daramee.StringTableEditor
 				"String Table Editor", MessageBoxButton.YesNo ) == MessageBoxResult.No )
 				return;
 
+			UndoManager.SaveToUndoStack ( stringTable, true );
 			foreach ( TableRecord record in dataGridTable.SelectedItems )
 			{
 				stringTable.RemoveKey ( record.Key );
@@ -235,6 +293,8 @@ namespace Daramee.StringTableEditor
 
 		private void DataGridTable_CellEditEnding ( object sender, DataGridCellEditEndingEventArgs e )
 		{
+			if ( !e.Cancel )
+				UndoManager.SaveToUndoStack ( stringTable, true );
 			IsSaved = false;
 		}
 

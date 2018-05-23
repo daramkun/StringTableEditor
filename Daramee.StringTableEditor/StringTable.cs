@@ -19,6 +19,7 @@ namespace Daramee.StringTableEditor
 	{
 		Dictionary<CultureInfo, Table> tables;
 
+		[field:NonSerialized]
 		public event NotifyCollectionChangedEventHandler CollectionChanged;
 
 		public StringTableKeyCollection ( Dictionary<CultureInfo, Table> tables )
@@ -60,6 +61,7 @@ namespace Daramee.StringTableEditor
 			}
 		}
 
+		[field: NonSerialized]
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		public TableRecord ( string key, string value = "" )
@@ -154,6 +156,7 @@ namespace Daramee.StringTableEditor
 		[NonSerialized]
 		StringTableKeyCollection keys;
 
+		[field: NonSerialized]
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		public StringTableKeyCollection Keys => keys ?? ( keys = new StringTableKeyCollection ( tables ) );
