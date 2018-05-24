@@ -335,6 +335,7 @@ namespace Daramee.StringTableEditor
 			return true;
 		}
 
+#pragma warning disable CS0649
 		[DataContract]
 		private class IOContract
 		{
@@ -361,5 +362,6 @@ namespace Daramee.StringTableEditor
 			[DataMember ( Name = "languages", Order = 6 )]
 			public List<Language> Languages;
 		}
+#pragma warning restore CS0649
 	}
 }
