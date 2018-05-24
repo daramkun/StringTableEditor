@@ -109,6 +109,14 @@ namespace Daramee.StringTableEditor
 
 		}
 
+		public Table ( IEnumerable<TableRecord> collection )
+		{
+			foreach ( var record in collection )
+			{
+				Add ( record.Key, record.Value );
+			}
+		}
+
 		public void Add ( string key, string value )
 		{
 			Add ( new TableRecord ( key, value ) );
@@ -225,7 +233,7 @@ namespace Daramee.StringTableEditor
 		{
 			if ( tables.ContainsKey ( cultureInfo ) || cultureInfo == CultureInfo.InvariantCulture )
 				throw new ArgumentException ();
-			tables.Add ( cultureInfo, tables [ tables.Keys.FirstOrDefault () ] );
+			tables.Add ( cultureInfo, new Table ( tables [ tables.Keys.FirstOrDefault () ] ) );
 			Keys.DoNotifyCollectionChange ( new NotifyCollectionChangedEventArgs ( NotifyCollectionChangedAction.Add, cultureInfo ) );
 		}
 
@@ -363,5 +371,106 @@ namespace Daramee.StringTableEditor
 			public List<Language> Languages;
 		}
 #pragma warning restore CS0649
+
+		public string GetAndroidStringsXML ( CultureInfo cultureInfo, Stream stream )
+		{
+			StringBuilder builder = new StringBuilder ();
+			builder.Append ( "<resources>\n" );
+			foreach ( var kv in tables [ cultureInfo ] )
+			{
+				builder.Append ( "\t<string name=\"" ).Append ( kv.Key ).Append ( "\">" );
+				builder.Append ( "<![CDATA[" ).Append ( kv.Value ).Append ( "]]>" );
+				builder.Append ( "</string>\n" );
+			}
+			builder.Append ( "</resources>\n" );
+			return builder.ToString ();
+		}
+
+		public string GetDotNetResX ( CultureInfo cultureInfo, Stream stream )
+		{
+			StringBuilder builder = new StringBuilder ();
+			builder.Append ( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" );
+			builder.Append ( "<root>\n" );
+			builder.Append ( "  <xsd:schema id=\"root\" xmlns=\"\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:msdata=\"urn:schemas-microsoft-com:xml-msdata\">\n" );
+			builder.Append ( "    <xsd:import namespace=\"http://www.w3.org/XML/1998/namespace\" />\n" );
+			builder.Append ( "    <xsd:element name=\"root\" msdata:IsDataSet=\"true\">\n" );
+			builder.Append ( "      <xsd:complexType>\n" );
+			builder.Append ( "        <xsd:choice maxOccurs=\"unbounded\">\n" );
+			builder.Append ( "          <xsd:element name=\"data\">\n" );
+			builder.Append ( "            <xsd:complexType>\n" );
+			builder.Append ( "              <xsd:sequence>\n" );
+			builder.Append ( "                <xsd:element name=\"value\" type=\"xsd:string\" minOccurs=\"0\" msdata:Ordinal=\"1\" />\n" );
+			builder.Append ( "                <xsd:element name=\"comment\" type=\"xsd:string\" minOccurs=\"0\" msdata:Ordinal=\"2\" />\n" );
+			builder.Append ( "              </xsd:sequence>\n" );
+			builder.Append ( "              <xsd:attribute name=\"name\" type=\"xsd:string\" use=\"required\" msdata:Ordinal=\"1\" />\n" );
+			builder.Append ( "              <xsd:attribute name=\"type\" type=\"xsd:string\" msdata:Ordinal=\"3\" />\n" );
+			builder.Append ( "              <xsd:attribute name=\"mimetype\" type=\"xsd:string\" msdata:Ordinal=\"4\" />\n" );
+			builder.Append ( "              <xsd:attribute ref=\"xml:space\" />\n" );
+			builder.Append ( "            </xsd:complexType>\n" );
+			builder.Append ( "          </xsd:element>\n" );
+			builder.Append ( "          <xsd:element name=\"resheader\">\n" );
+			builder.Append ( "            <xsd:complexType>\n" );
+			builder.Append ( "              <xsd:sequence>\n" );
+			builder.Append ( "                <xsd:element name=\"value\" type=\"xsd:string\" minOccurs=\"0\" msdata:Ordinal=\"1\" />\n" );
+			builder.Append ( "              </xsd:sequence>\n" );
+			builder.Append ( "              <xsd:attribute name=\"name\" type=\"xsd:string\" use=\"required\" />\n" );
+			builder.Append ( "            </xsd:complexType>\n" );
+			builder.Append ( "          </xsd:element>\n" );
+			builder.Append ( "        </xsd:choice>\n" );
+			builder.Append ( "      </xsd:complexType>\n" );
+			builder.Append ( "    </xsd:element>\n" );
+			builder.Append ( "  </xsd:schema>\n" );
+			builder.Append ( "  <resheader name=\"resmimetype\">\n" );
+			builder.Append ( "    <value>text/microsoft-resx</value>\n" );
+			builder.Append ( "  </resheader>\n" );
+			builder.Append ( "  <resheader name=\"version\">\n" );
+			builder.Append ( "    <value>2.0</value>\n" );
+			builder.Append ( "  </resheader>\n" );
+			builder.Append ( "  <resheader name=\"reader\">\n" );
+			builder.Append ( "    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>\n" );
+			builder.Append ( "  </resheader>\n" );
+			builder.Append ( "  <resheader name=\"writer\">\n" );
+			builder.Append ( "    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>\n" );
+			builder.Append ( "  </resheader>\n" );
+			foreach ( var kv in tables [ cultureInfo ] )
+			{
+				builder.Append ( "    <data	name=\"" ).Append ( kv.Key ).Append ( "\" xml:space=\"preserve\">\n" );
+				builder.Append ( "      <value><![CDATA[" ).Append ( kv.Value ).Append ( "]]></value>\n" );
+				builder.Append ( "    </data>\n" );
+			}
+			builder.Append ( "</root>" );
+			return builder.ToString ();
+		}
+
+		public string GetXAMLResourceDictionary ( CultureInfo cultureInfo )
+		{
+			StringBuilder builder = new StringBuilder ();
+			builder.Append ( "<ResourceDictionary xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" xmlns:system=\"clr-namespace:System;assembly=mscorlib\">" );
+			foreach ( var kv in tables [ cultureInfo ] )
+			{
+				builder.Append ( "\t<system:String x:Key=\"" ).Append ( kv.Key ).Append ( "\">" );
+				builder.Append ( "<![CDATA[" ).Append ( kv.Value ).Append ( "]]>" );
+				builder.Append ( "</system:String>\n" );
+			}
+			builder.Append ( "</ResourceDictionary>" );
+			return builder.ToString ();
+		}
+
+		public string GetApplePropertyLists ( CultureInfo cultureInfo, Stream stream )
+		{
+			StringBuilder builder = new StringBuilder ();
+			builder.Append ( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" );
+			builder.Append ( "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n" );
+			builder.Append ( "<plist version=\"1.0\">\n" );
+			builder.Append ( "<dict>\n" );
+			foreach ( var kv in tables [ cultureInfo ] )
+			{
+				builder.Append ( "\t<key>" ).Append ( kv.Key ).Append ( "</key>\n" );
+				builder.Append ( "\t<string><![CDATA[" ).Append ( kv.Value ).Append ( "]]></string>\n" );
+			}
+			builder.Append ( "</dict>\n" );
+			builder.Append ( "</plist>\n" );
+			return builder.ToString ();
+		}
 	}
 }
