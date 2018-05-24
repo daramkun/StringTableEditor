@@ -13,5 +13,13 @@ namespace Daramee.StringTableEditor
 	/// </summary>
 	public partial class App : Application
 	{
+		public string LoadingFile { get; private set; } = null;
+
+		protected override void OnStartup ( StartupEventArgs e )
+		{
+			if ( e.Args.Length > 0 )
+				LoadingFile = e.Args [ 0 ];
+			base.OnStartup ( e );
+		}
 	}
 }

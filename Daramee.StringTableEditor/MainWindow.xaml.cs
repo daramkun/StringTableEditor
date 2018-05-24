@@ -1,6 +1,7 @@
 ﻿using Daramee.DaramCommonLib;
 using Microsoft.Win32;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -151,6 +152,26 @@ namespace Daramee.StringTableEditor
 			UndoManager.UpdateUndo += ( sender, e ) => { PC ( nameof ( UndoManagerHasUndoStackItem ) ); PC ( nameof ( UndoManagerHasRedoStackItem ) ); };
 			UndoManager.UpdateRedo += ( sender, e ) => { PC ( nameof ( UndoManagerHasUndoStackItem ) ); PC ( nameof ( UndoManagerHasRedoStackItem ) ); };
 
+			if ( ( Application.Current as App ).LoadingFile != null )
+			{
+				using ( Stream stream = new FileStream ( ( Application.Current as App ).LoadingFile, FileMode.Open ) )
+				{
+					var st = StringTable.LoadFrom ( stream );
+					if ( st != null )
+					{
+						stringTable = st;
+						SavePath = ( Application.Current as App ).LoadingFile;
+						IsSaved = true;
+
+						UndoManager.ClearAll ();
+						ResetControlBinding ();
+					}
+					else
+						MessageBox.Show ( "It is not String Table JSON Formatted file.",
+							"String Table Editor", MessageBoxButton.OK, MessageBoxImage.Error );
+				}
+			}
+
 			ResetControlBinding ();
 		}
 
@@ -254,12 +275,19 @@ namespace Daramee.StringTableEditor
 			if ( listBoxCultureInfos.SelectedItems.Count == 0 )
 				return;
 
+			if ( listBoxCultureInfos.SelectedItems.Count == stringTable.KeysCount )
+			{
+				MessageBox.Show ( "There must be at least one Language-Country." );
+				return;
+			}
+
 			if ( MessageBox.Show ( "Are you want to remove selected languages?",
 				"String Table Editor", MessageBoxButton.YesNo ) == MessageBoxResult.No )
 				return;
 
 			UndoManager.SaveToUndoStack ( stringTable, true );
-			foreach ( CultureInfo cultureInfo in listBoxCultureInfos.SelectedItems )
+			ArrayList removeList = new ArrayList ( listBoxCultureInfos.SelectedItems );
+			foreach ( CultureInfo cultureInfo in removeList )
 			{
 				stringTable.Remove ( cultureInfo );
 			}
@@ -285,7 +313,8 @@ namespace Daramee.StringTableEditor
 				return;
 
 			UndoManager.SaveToUndoStack ( stringTable, true );
-			foreach ( TableRecord record in dataGridTable.SelectedItems )
+			ArrayList removeList = new ArrayList ( dataGridTable.SelectedItems );
+			foreach ( TableRecord record in removeList )
 			{
 				stringTable.RemoveKey ( record.Key );
 			}

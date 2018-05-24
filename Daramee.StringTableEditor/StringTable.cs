@@ -169,6 +169,8 @@ namespace Daramee.StringTableEditor
 		public string Copyright { get => copyright; set { copyright = value; PropertyChanged?.Invoke ( this, new PropertyChangedEventArgs ( nameof ( Copyright ) ) ); } }
 		public string Contact { get => contact; set { contact = value; PropertyChanged?.Invoke ( this, new PropertyChangedEventArgs ( nameof ( Contact ) ) ); } }
 
+		public int KeysCount => tables.Count;
+
 		public StringTable ()
 		{
 			tables = new Dictionary<CultureInfo, Table>
@@ -223,7 +225,7 @@ namespace Daramee.StringTableEditor
 		{
 			if ( tables.ContainsKey ( cultureInfo ) || cultureInfo == CultureInfo.InvariantCulture )
 				throw new ArgumentException ();
-			tables.Add ( cultureInfo, tables [ CultureInfo.InvariantCulture ] );
+			tables.Add ( cultureInfo, tables [ tables.Keys.FirstOrDefault () ] );
 			Keys.DoNotifyCollectionChange ( new NotifyCollectionChangedEventArgs ( NotifyCollectionChangedAction.Add, cultureInfo ) );
 		}
 
@@ -231,13 +233,28 @@ namespace Daramee.StringTableEditor
 		{
 			if ( !tables.ContainsKey ( cultureInfo ) )
 				throw new KeyNotFoundException ();
-			tables.Remove ( cultureInfo );
-			Keys.DoNotifyCollectionChange ( new NotifyCollectionChangedEventArgs ( NotifyCollectionChangedAction.Remove, cultureInfo ) );
+			int index = IndexOf ( cultureInfo );
+			if ( tables.Remove ( cultureInfo ) )
+				Keys.DoNotifyCollectionChange ( new NotifyCollectionChangedEventArgs ( NotifyCollectionChangedAction.Remove,
+					cultureInfo, index ) );
+		}
+
+		private int IndexOf ( CultureInfo cultureInfo )
+		{
+			IEnumerator<CultureInfo> c = tables.Keys.GetEnumerator ();
+			for ( int i = 0; ; ++i )
+			{
+				if ( !c.MoveNext () )
+					break;
+				if ( c.Current == cultureInfo )
+					return i;
+			}
+			return -1;
 		}
 
 		public bool ContainsKey ( string key )
 		{
-			return tables [ CultureInfo.InvariantCulture ].ContainsKey ( key );
+			return tables [ tables.Keys.FirstOrDefault () ].ContainsKey ( key );
 		}
 
 		public bool AddKey ( string key )
