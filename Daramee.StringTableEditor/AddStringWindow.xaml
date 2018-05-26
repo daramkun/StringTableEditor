@@ -7,7 +7,7 @@
         xmlns:dcl="clr-namespace:Daramee.DaramCommonLib"
         DataContext="{x:Static dcl:StringTable.SharedStrings}"
         mc:Ignorable="d" ShowInTaskbar="False" FocusManager.FocusedElement="{Binding ElementName=textBoxKey}"
-        Title="{Binding Path=[addstring_window]}" Height="120" Width="320">
+        Title="{Binding Path=[addstring_window]}" Height="120" Width="320" ResizeMode="NoResize">
     <Grid Margin="8">
         <Grid.RowDefinitions>
             <RowDefinition />

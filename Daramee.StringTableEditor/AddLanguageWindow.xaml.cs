@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Daramee.DaramCommonLib;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -28,6 +29,11 @@ namespace Daramee.StringTableEditor
 
 			comboBoxLanguageRegion.ItemsSource = from c in CultureInfo.GetCultures ( CultureTypes.SpecificCultures ) where !stringTable.Keys.Contains ( c ) orderby c.DisplayName select c;
         }
+
+		protected override void OnSourceInitialized ( EventArgs e )
+		{
+			WindowUtility.RemoveWindowIcon ( this );
+		}
 
 		private void AddButtn_Click ( object sender, RoutedEventArgs e )
 		{

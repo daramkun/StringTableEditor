@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Daramee.DaramCommonLib;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,6 +29,11 @@ namespace Daramee.StringTableEditor
 		{
 			InitializeComponent ();
 			this.stringTable = stringTable;
+		}
+
+		protected override void OnSourceInitialized ( EventArgs e )
+		{
+			WindowUtility.RemoveWindowIcon ( this );
 		}
 
 		private void AddButtn_Click ( object sender, RoutedEventArgs e )

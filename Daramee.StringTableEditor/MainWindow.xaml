@@ -43,7 +43,7 @@
                 <MenuItem Header="{Binding Path=[menu_edit_undo]}" Click="Undo_Click" InputGestureText="Ctrl+Z" IsEnabled="{Binding ElementName=mainWindow, Path=UndoManagerHasUndoStackItem}" />
                 <MenuItem Header="{Binding Path=[menu_edit_redo]}" Click="Redo_Click" InputGestureText="Ctrl+Y" IsEnabled="{Binding ElementName=mainWindow, Path=UndoManagerHasRedoStackItem}" />
                 <Separator />
-                <MenuItem Header="{Binding Path=[menu_edit_find]}" />
+                <MenuItem Header="{Binding Path=[menu_edit_find]}" IsEnabled="False" />
             </MenuItem>
             <MenuItem Header="{Binding Path=[menu_strings]}">
                 <MenuItem Header="{Binding Path=[menu_strings_add_language]}" Click="AddLanguage_Click" />
@@ -55,7 +55,7 @@
                 <MenuItem Header="{Binding Path=[menu_strings_informations]}" Click="EditInfo_Click" />
             </MenuItem>
             <MenuItem Header="{Binding Path=[menu_help]}">
-                <MenuItem Header="{Binding Path=[menu_help_about]}" />
+                <MenuItem Header="{Binding Path=[menu_help_about]}" Click="About_Click" />
             </MenuItem>
         </Menu>
 

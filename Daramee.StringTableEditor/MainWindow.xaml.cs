@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -365,6 +366,11 @@ namespace Daramee.StringTableEditor
 			{
 				RemoveString_Click ( sender, e );
 			}
+		}
+
+		private void About_Click ( object sender, RoutedEventArgs e )
+		{
+			Process.Start ( "https://github.com/daramkun/StringTableEditor" );
 		}
 	}
 }
