@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Daramee.DaramCommonLib;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -13,7 +15,15 @@ namespace Daramee.StringTableEditor
 	/// </summary>
 	public partial class App : Application
 	{
+		Daramee.DaramCommonLib.StringTable ownLocalizer;
+
 		public string LoadingFile { get; private set; } = null;
+
+		public App ()
+		{
+			ProgramHelper.Initialize ( Assembly.GetExecutingAssembly (), "daramkun", "StringTableEditor" );
+			ownLocalizer = new Daramee.DaramCommonLib.StringTable ();
+		}
 
 		protected override void OnStartup ( StartupEventArgs e )
 		{

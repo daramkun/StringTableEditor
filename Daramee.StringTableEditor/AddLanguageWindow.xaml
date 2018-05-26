@@ -5,8 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Daramee.StringTableEditor"
         xmlns:conv="clr-namespace:Daramee.StringTableEditor.Converters"
+        xmlns:dcl="clr-namespace:Daramee.DaramCommonLib"
+        DataContext="{x:Static dcl:StringTable.SharedStrings}"
         mc:Ignorable="d" ShowInTaskbar="False" ResizeMode="NoResize"
-        Title="Add Language" Height="120" Width="320">
+        Title="{Binding Path=[addlanguage_window]}" Height="120" Width="320">
     <Window.Resources>
         <conv:AddLanguageCultureInfoConverter x:Key="addLanguageCultureInfoConverter" />
     </Window.Resources>
@@ -21,7 +23,7 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Text="Language-Region:" VerticalAlignment="Center" />
+        <TextBlock Text="{Binding Path=[addlanguage_language_region]}" VerticalAlignment="Center" />
         <ComboBox Name="comboBoxLanguageRegion" VerticalAlignment="Center" Grid.Column="1">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
@@ -31,8 +33,8 @@
         </ComboBox>
 
         <StackPanel Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-            <Button Content="Add" Width="64" Margin="0,0,8,0" Click="AddButtn_Click" IsDefault="True" />
-            <Button Content="Cancel" Width="64" Click="CancelButton_Click" IsCancel="True" />
+            <Button Content="{Binding Path=[addlanguage_add]}" Width="64" Margin="0,0,8,0" Click="AddButtn_Click" IsDefault="True" />
+            <Button Content="{Binding Path=[addlanguage_cancel]}" Width="64" Click="CancelButton_Click" IsCancel="True" />
         </StackPanel>
     </Grid>
 </Window>

@@ -65,7 +65,8 @@ namespace Daramee.StringTableEditor
 		private bool CheckSavedState ()
 		{
 			if ( IsSaved ) return true;
-			var button = MessageBox.Show ( "Are you want to save?", "String Table Editor", MessageBoxButton.YesNoCancel, MessageBoxImage.Question );
+			var button = MessageBox.Show ( DaramCommonLib.StringTable.SharedStrings [ "message_ask_save" ],
+				"String Table Editor", MessageBoxButton.YesNoCancel, MessageBoxImage.Question );
 			switch ( button )
 			{
 				case MessageBoxResult.Yes:
@@ -103,7 +104,7 @@ namespace Daramee.StringTableEditor
 					ResetControlBinding ();
 				}
 				else
-					MessageBox.Show ( "It is not String Table JSON Formatted file.",
+					MessageBox.Show ( DaramCommonLib.StringTable.SharedStrings [ "message_no_stringtable_file" ],
 						"String Table Editor", MessageBoxButton.OK, MessageBoxImage.Error );
 			}
 		}
@@ -185,7 +186,7 @@ namespace Daramee.StringTableEditor
 						ResetControlBinding ();
 					}
 					else
-						MessageBox.Show ( "It is not String Table JSON Formatted file.",
+						MessageBox.Show ( DaramCommonLib.StringTable.SharedStrings [ "message_no_stringtable_file" ],
 							"String Table Editor", MessageBoxButton.OK, MessageBoxImage.Error );
 				}
 			}
@@ -295,11 +296,11 @@ namespace Daramee.StringTableEditor
 
 			if ( listBoxCultureInfos.SelectedItems.Count == stringTable.KeysCount )
 			{
-				MessageBox.Show ( "There must be at least one Language-Country." );
+				MessageBox.Show ( DaramCommonLib.StringTable.SharedStrings [ "message_must_least_one_language" ] );
 				return;
 			}
 
-			if ( MessageBox.Show ( "Are you want to remove selected languages?",
+			if ( MessageBox.Show ( DaramCommonLib.StringTable.SharedStrings [ "message_ask_remove_languages" ],
 				"String Table Editor", MessageBoxButton.YesNo ) == MessageBoxResult.No )
 				return;
 
@@ -326,7 +327,7 @@ namespace Daramee.StringTableEditor
 			if ( dataGridTable.SelectedItems.Count == 0 )
 				return;
 
-			if ( MessageBox.Show ( "Are you want to remove selected strings?",
+			if ( MessageBox.Show ( DaramCommonLib.StringTable.SharedStrings [ "message_ask_remove_strings" ],
 				"String Table Editor", MessageBoxButton.YesNo ) == MessageBoxResult.No )
 				return;
 
