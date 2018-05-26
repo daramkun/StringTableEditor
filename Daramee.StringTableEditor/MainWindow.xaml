@@ -225,4 +225,21 @@
             </DataGrid>
         </Grid>
     </Grid>
+
+    <Window.CommandBindings>
+        <CommandBinding Command="{x:Static local:MainWindow.CommandNewFile}" Executed="CommandNewFile_Executed" />
+        <CommandBinding Command="{x:Static local:MainWindow.CommandOpenFile}" Executed="CommandOpenFile_Executed" />
+        <CommandBinding Command="{x:Static local:MainWindow.CommandSaveFile}" Executed="CommandSaveFile_Executed" />
+        <CommandBinding Command="{x:Static local:MainWindow.CommandUndoWorks}" Executed="CommandUndoWorks_Executed" />
+        <CommandBinding Command="{x:Static local:MainWindow.CommandRedoWorks}" Executed="CommandRedoWorks_Executed" />
+        <CommandBinding Command="{x:Static local:MainWindow.CommandAddString}" Executed="CommandAddString_Executed" />
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Key="N" Modifiers="Control" Command="{x:Static local:MainWindow.CommandNewFile}" />
+        <KeyBinding Key="O" Modifiers="Control" Command="{x:Static local:MainWindow.CommandOpenFile}" />
+        <KeyBinding Key="S" Modifiers="Control" Command="{x:Static local:MainWindow.CommandSaveFile}" />
+        <KeyBinding Key="Z" Modifiers="Control" Command="{x:Static local:MainWindow.CommandUndoWorks}" />
+        <KeyBinding Key="Y" Modifiers="Control" Command="{x:Static local:MainWindow.CommandRedoWorks}" />
+        <KeyBinding Key="T" Modifiers="Control" Command="{x:Static local:MainWindow.CommandAddString}" />
+    </Window.InputBindings>
 </Window>

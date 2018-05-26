@@ -145,6 +145,24 @@ namespace Daramee.StringTableEditor
 			dataGridTable.ItemsSource = null;
 		}
 
+		#region Commands
+		public static RoutedCommand CommandNewFile = new RoutedCommand ();
+		public static RoutedCommand CommandOpenFile = new RoutedCommand ();
+		public static RoutedCommand CommandSaveFile = new RoutedCommand ();
+		public static RoutedCommand CommandUndoWorks = new RoutedCommand ();
+		public static RoutedCommand CommandRedoWorks = new RoutedCommand ();
+		public static RoutedCommand CommandAddString = new RoutedCommand ();
+
+		private void CommandNewFile_Executed ( object sender, ExecutedRoutedEventArgs e ) { NewFile_Click ( sender, e ); }
+		private void CommandOpenFile_Executed ( object sender, ExecutedRoutedEventArgs e ) { OpenFile (); }
+		private void CommandSaveFile_Executed ( object sender, ExecutedRoutedEventArgs e ) { SaveFile (); }
+
+		private void CommandUndoWorks_Executed ( object sender, ExecutedRoutedEventArgs e ) { Undo_Click ( sender, e ); }
+		private void CommandRedoWorks_Executed ( object sender, ExecutedRoutedEventArgs e ) { Redo_Click ( sender, e ); }
+
+		private void CommandAddString_Executed ( object sender, ExecutedRoutedEventArgs e ) { AddString_Click ( sender, e ); }
+		#endregion
+
 		public MainWindow ()
 		{
 			InitializeComponent ();
