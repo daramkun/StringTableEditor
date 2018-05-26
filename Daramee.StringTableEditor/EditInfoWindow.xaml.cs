@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Daramee.DaramCommonLib;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,6 +33,11 @@ namespace Daramee.StringTableEditor
 			textBoxContact.Text = stringTable.Contact;
 			textBoxTargetApp.Text = stringTable.TargetApp;
 			textBoxTargetVersion.Text = stringTable.TargetVersion;
+		}
+
+		protected override void OnSourceInitialized ( EventArgs e )
+		{
+			WindowUtility.RemoveWindowIcon ( this );
 		}
 
 		private void ApplyButton_Click ( object sender, RoutedEventArgs e )
