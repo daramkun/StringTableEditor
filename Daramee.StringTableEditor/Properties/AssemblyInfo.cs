@@ -7,13 +7,13 @@ using System.Windows;
 // 어셈블리에 대한 일반 정보는 다음 특성 집합을 통해 
 // 제어됩니다. 어셈블리와 관련된 정보를 수정하려면
 // 이러한 특성 값을 변경하세요.
-[assembly: AssemblyTitle ( "Daramee.StringTableEditor" )]
-[assembly: AssemblyDescription ( "" )]
+[assembly: AssemblyTitle ( "String Table Editor" )]
+[assembly: AssemblyDescription ( "JSON Formatted String Table Editor" )]
 [assembly: AssemblyConfiguration ( "" )]
-[assembly: AssemblyCompany ( "" )]
+[assembly: AssemblyCompany ( "DARAM WORLD" )]
 [assembly: AssemblyProduct ( "Daramee.StringTableEditor" )]
-[assembly: AssemblyCopyright ( "Copyright ©  2018" )]
-[assembly: AssemblyTrademark ( "" )]
+[assembly: AssemblyCopyright ( "Copyright © 2018 Jin Jae-yeon" )]
+[assembly: AssemblyTrademark ( "DaramTools®" )]
 [assembly: AssemblyCulture ( "" )]
 
 // ComVisible을 false로 설정하면 이 어셈블리의 형식이 COM 구성 요소에 
@@ -51,5 +51,7 @@ using System.Windows;
 // 모든 값을 지정하거나 아래와 같이 '*'를 사용하여 빌드 번호 및 수정 번호가 자동으로
 // 지정되도록 할 수 있습니다.
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion ( "1.0.0.0" )]
-[assembly: AssemblyFileVersion ( "1.0.0.0" )]
+[assembly: AssemblyVersion ( "0.0.1.0" )]
+[assembly: AssemblyFileVersion ( "0.0.1.0" )]
+[assembly: Guid ( "70A951FE-6602-4F74-A009-1B345E4708B0" )]
+
