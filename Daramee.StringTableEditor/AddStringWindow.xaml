@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Daramee.StringTableEditor"
-        mc:Ignorable="d"
+        mc:Ignorable="d" ShowInTaskbar="False"
         Title="Add String" Height="120" Width="320">
     <Grid Margin="8">
         <Grid.RowDefinitions>
@@ -20,8 +20,8 @@
         <TextBox Name="textBoxKey" VerticalAlignment="Center" Grid.Column="1" />
 
         <StackPanel Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-            <Button Content="Add" Width="64" Margin="0,0,8,0" Click="AddButtn_Click" />
-            <Button Content="Cancel" Width="64" Click="CancelButton_Click" />
+            <Button Content="Add" Width="64" Margin="0,0,8,0" Click="AddButtn_Click" IsDefault="True" />
+            <Button Content="Cancel" Width="64" Click="CancelButton_Click" IsCancel="True" />
         </StackPanel>
     </Grid>
 </Window>

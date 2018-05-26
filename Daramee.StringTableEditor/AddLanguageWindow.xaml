@@ -31,8 +31,8 @@
         </ComboBox>
 
         <StackPanel Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-            <Button Content="Add" Width="64" Margin="0,0,8,0" Click="AddButtn_Click" />
-            <Button Content="Cancel" Width="64" Click="CancelButton_Click" />
+            <Button Content="Add" Width="64" Margin="0,0,8,0" Click="AddButtn_Click" IsDefault="True" />
+            <Button Content="Cancel" Width="64" Click="CancelButton_Click" IsCancel="True" />
         </StackPanel>
     </Grid>
 </Window>

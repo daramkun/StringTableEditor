@@ -29,10 +29,10 @@
                 <MenuItem Header="Save _as..." Click="SaveAs_Click" />
                 <Separator />
                 <MenuItem Header="Ex_port to">
-                    <MenuItem Header="Android Strings.xml" />
-                    <MenuItem Header=".NET ResX String Table" />
-                    <MenuItem Header="XAML Resource Dictionary" />
-                    <MenuItem Header="Apple Property Lists String Table" />
+                    <MenuItem Header="Android Strings.xml" IsEnabled="False" />
+                    <MenuItem Header=".NET ResX String Table" IsEnabled="False" />
+                    <MenuItem Header="XAML Resource Dictionary" IsEnabled="False" />
+                    <MenuItem Header="Apple Property Lists String Table" IsEnabled="False" />
                 </MenuItem>
                 <Separator />
                 <MenuItem Header="E_xit" Click="Exit_Click" />
